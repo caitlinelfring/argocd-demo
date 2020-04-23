@@ -1,22 +1,26 @@
 portforward:
 	kubectl port-forward svc/argocd-server -n argocd 8080:443
 
-pre-production:
-	argocd app create $@ \
-    --dest-namespace argocd \
-    --dest-server https://kubernetes.docker.internal:6443 \
-    --repo https://github.com/caitlin615/argocd-demo.git \
-    --path $@
-
-sync-pre-production:
-	argocd app sync pre-production
 
 production:
 	argocd app create $@ \
     --dest-namespace argocd \
     --dest-server https://kubernetes.docker.internal:6443 \
     --repo https://github.com/caitlin615/argocd-demo.git \
-    --path $@
+    --path apps \
+    --values apps/values-$@.yaml
+
+pre-production:
+	argocd app create $@ \
+    --dest-namespace argocd \
+    --dest-server https://kubernetes.docker.internal:6443 \
+    --repo https://github.com/caitlin615/argocd-demo.git \
+    --path apps \
+    --values apps/values-$@.yaml
+
+sync-pre-production:
+	argocd app sync pre-production
+
 
 sync-production:
 	argocd app sync production
