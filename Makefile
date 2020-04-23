@@ -8,7 +8,7 @@ production:
     --dest-server https://kubernetes.docker.internal:6443 \
     --repo https://github.com/caitlin615/argocd-demo.git \
     --path apps \
-    --values apps/values-$@.yaml
+    --values values-$@.yaml
 
 pre-production:
 	argocd app create $@ \
@@ -16,7 +16,7 @@ pre-production:
     --dest-server https://kubernetes.docker.internal:6443 \
     --repo https://github.com/caitlin615/argocd-demo.git \
     --path apps \
-    --values apps/values-$@.yaml
+    --values values-$@.yaml
 
 sync-pre-production:
 	argocd app sync pre-production
