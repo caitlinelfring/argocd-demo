@@ -8,7 +8,10 @@ pre-production:
     --repo https://github.com/caitlin615/argocd-demo.git \
     --path $@
 
-.PHONY: pre-production portforward
+sync-pre-production:
+	argocd app sync pre-production
+
+.PHONY: pre-production portforward init-argocd deinit argocd sync-pre-production
 
 init-argocd:
 	@kubectl create namespace argocd
@@ -17,6 +20,7 @@ init-argocd:
 	@echo "First run 'make portforward' in a new terminal window"
 	@echo "using command 'argocd login localhost:8080'"
 	@echo "change password with 'argocd account update-password'"
+	@echo "next, run 'argocd cluster add' and choose a cluster to connect add, ie 'argocd cluster add docker-desktop'"
 
 deinit-argocd:
 	kubectl delete -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
