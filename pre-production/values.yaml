@@ -3,6 +3,7 @@ spec:
     server: https://kubernetes.default.svc
     namespace: pre-production
   source:
+    path: charts/guestbook
     repoURL: https://github.com/caitlin615/argocd-demo
     targetRevision: HEAD
 
