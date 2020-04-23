@@ -38,7 +38,11 @@ spec:
               port: http
           env:
             - name: GET_HOSTS_FROM
-              value: dns
+              value: env
+            - name: REDIS_MASTER_SERVICE_HOST
+              value: {{ template "helm-guestbook.fullname" . }}-redis-master
+            - name: REDIS_SLAVE_SERVICE_HOST
+              value: {{ template "helm-guestbook.fullname" . }}-redis-master
           resources:
 {{ toYaml .Values.resources | indent 12 }}
     {{- with .Values.nodeSelector }}
