@@ -1,0 +1,17 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: {{ .Values.environment }}
+  namespace: argocd
+spec:
+  # Project description
+  description: {{ .Values.environment }}
+
+  # Allow manifests to deploy from any Git repos
+  sourceRepos:
+  - '*'
+
+  # Only permit applications to deploy to the guestbook namespace in the same cluster
+  destinations:
+  - namespace: {{ .Values.spec.destination.namespace }}
+    server: https://kubernetes.default.svc
