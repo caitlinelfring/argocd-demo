@@ -9,7 +9,7 @@ spec:
   destination:
     namespace: {{ .Values.spec.destination.namespace }}
     server: {{ .Values.spec.destination.server }}
-  project: {{ .Values.project }}
+  project: {{ .Values.environment }}
   source:
     path: guestbook
     repoURL: {{ .Values.spec.source.repoURL }}
