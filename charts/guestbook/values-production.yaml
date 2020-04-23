@@ -2,4 +2,4 @@ service:
   type: LoadBalancer
   port: 8082
 image:
-  tag: 0.1
+  tag: v1
