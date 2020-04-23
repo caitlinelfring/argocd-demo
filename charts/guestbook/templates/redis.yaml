@@ -3,7 +3,7 @@ kind: Service
 metadata:
   name: {{ template "helm-guestbook.fullname" . }}-redis-master
   labels:
-    app: {{ template "helm-guestbook.name" . }}-redis-master
+    app: {{ template "helm-guestbook.fullname" . }}-redis-master
     tier: backend
     role: master
 spec:
@@ -33,7 +33,7 @@ spec:
   template:
     metadata:
       labels:
-        app: {{ template "helm-guestbook.name" . }}-redis-master
+        app: {{ template "helm-guestbook.fullname" . }}-redis-master
         tier: backend
         role: master
     spec:
