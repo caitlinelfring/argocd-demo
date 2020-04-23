@@ -33,7 +33,9 @@ delete:
 .PHONY: portforward init-argocd deinit-argocd  \
 	production sync-production \
 	pre-production sync-pre-production \
-	deploy sync delete
+	deploy sync delete \
+	nginx deinit-nginx \
+	deinit
 
 init-argocd:
 	@kubectl create namespace argocd
@@ -47,3 +49,13 @@ init-argocd:
 deinit-argocd:
 	kubectl delete -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
 	kubectl delete namespace argocd
+
+nginx:
+	kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/nginx-0.30.0/deploy/static/mandatory.yaml
+	kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/nginx-0.30.0/deploy/static/provider/cloud-generic.yaml
+
+deinit-nginx:
+	kubectl delete -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/nginx-0.30.0/deploy/static/mandatory.yaml
+	kubectl delete -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/nginx-0.30.0/deploy/static/provider/cloud-generic.yaml
+
+deinit: deinit-argocd deinit-nginx
