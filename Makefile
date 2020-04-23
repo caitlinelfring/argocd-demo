@@ -20,12 +20,15 @@ pre-production:
 
 sync-pre-production:
 	argocd app sync pre-production
+	argocd app sync -l app.kubernetes.io/instance=pre-production
 
 sync-production:
 	argocd app sync production
+	argocd app sync -l app.kubernetes.io/instance=production
 
 deploy: pre-production production
 sync: sync-pre-production sync-production
+
 delete:
 	argocd app delete pre-production
 	argocd app delete production
