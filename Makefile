@@ -21,12 +21,19 @@ pre-production:
 sync-pre-production:
 	argocd app sync pre-production
 
-
 sync-production:
 	argocd app sync production
 
-.PHONY: pre-production portforward init-argocd deinit argocd sync-pre-production \
-	production sync-production
+deploy: pre-production production
+sync: sync-pre-production sync-production
+delete:
+	argocd app delete pre-production
+	argocd app delete production
+
+.PHONY: portforward init-argocd deinit-argocd  \
+	production sync-production \
+	pre-production sync-pre-production \
+	deploy sync delete
 
 init-argocd:
 	@kubectl create namespace argocd
