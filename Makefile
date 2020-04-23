@@ -11,7 +11,18 @@ pre-production:
 sync-pre-production:
 	argocd app sync pre-production
 
-.PHONY: pre-production portforward init-argocd deinit argocd sync-pre-production
+production:
+	argocd app create $@ \
+    --dest-namespace argocd \
+    --dest-server https://kubernetes.docker.internal:6443 \
+    --repo https://github.com/caitlin615/argocd-demo.git \
+    --path $@
+
+sync-production:
+	argocd app sync production
+
+.PHONY: pre-production portforward init-argocd deinit argocd sync-pre-production \
+	production sync-production
 
 init-argocd:
 	@kubectl create namespace argocd
