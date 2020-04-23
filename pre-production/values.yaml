@@ -3,7 +3,7 @@ spec:
     server: https://kubernetes.default.svc
     namespace: pre-production
   source:
-    repoURL: https://github.com/caitlin615/argo-demo
+    repoURL: https://github.com/caitlin615/argocd-demo
     targetRevision: HEAD
 
 environment: pre-production
