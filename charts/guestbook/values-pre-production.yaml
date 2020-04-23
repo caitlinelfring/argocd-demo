@@ -1,8 +1,8 @@
-service:
-  port: 8081
 image:
   tag: v2
 
 ingress:
   hosts:
-    - guestbook.pre-production.local
+    - host: guestbook.pre-production.local
+      paths:
+        - /
