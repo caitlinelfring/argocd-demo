@@ -33,7 +33,8 @@ delete:
 	pre-production sync-pre-production \
 	deploy sync delete \
 	init deinit \
-	init-argocd deinit-argocd
+	init-argocd deinit-argocd \
+	watch
 
 init: init-argocd
 deinit: deinit-argocd
@@ -48,3 +49,6 @@ init-argocd:
 deinit-argocd:
 	kubectl delete -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
 	kubectl delete namespace argocd
+
+watch:
+	watch "kubectl get pods -A --sort-by=status.startTime | awk 'NR<2{print \$$0;next}{print \$$0| \"tail -r\"}'"
