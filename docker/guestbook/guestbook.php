@@ -13,7 +13,16 @@ if (isset($_GET['cmd']) === true) {
     $host = getenv('REDIS_MASTER_SERVICE_HOST');
   }
   header('Content-Type: application/json');
-  if ($_GET['cmd'] == 'set') {
+  if ($_GET['cmd'] == 'del') {
+    $client = new Predis\Client([
+      'scheme' => 'tcp',
+      'host'   => $host,
+      'port'   => 6379,
+    ]);
+
+    $client->del($_GET['key']);
+    print('{"message": "Cleared"}');
+  } else if ($_GET['cmd'] == 'set') {
     $client = new Predis\Client([
       'scheme' => 'tcp',
       'host'   => $host,

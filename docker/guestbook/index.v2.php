@@ -16,6 +16,7 @@
     <fieldset>
     <input ng-model="msg" placeholder="Messages" class="form-control" type="text" name="input"><br>
     <button type="button" class="btn btn-primary" ng-click="controller.onRedis()">Submit</button>
+    <button type="button" class="btn btn-danger" ng-click="controller.clear()">Clear</button>
     </fieldset>
     </form>
     <div>
