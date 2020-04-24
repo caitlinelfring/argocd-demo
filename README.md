@@ -82,6 +82,12 @@ commit them, and push them to `master` (make sure you've forked this repo!). Wit
 
 Try changing `image.tag` to `v2` in `charts/guestbook/values-production.yml`! Update `replicaCount` and watch the magic happen!
 
+## Github Webhooks
+
+Check out [Git Webhook](https://argoproj.github.io/argo-cd/operator-manual/webhook/)
+for details on how to configure webhooks. See [configure-gh-webhook.sh](./configure-gh-webhook.sh)
+for an example of how to get this working with [ngrok](https://ngrok.com/).
+
 # Not included
 Not included in this POC are:
 * RBAC
@@ -89,6 +95,5 @@ Not included in this POC are:
 * User/Project management
 * Metrics
 * [Secrets](https://argoproj.github.io/argo-cd/operator-manual/secret-management/)
-* [Git Webhook](https://argoproj.github.io/argo-cd/operator-manual/webhook/)
 * CI
 * HA/DR
