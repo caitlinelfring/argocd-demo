@@ -1,8 +1,6 @@
+service:
+  type: LoadBalancer
+  port: 8082
+
 image:
   tag: v2
-
-ingress:
-  hosts:
-    - host: guestbook.pre-production.local
-      paths:
-        - /

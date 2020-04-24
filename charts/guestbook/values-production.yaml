@@ -1,8 +1,6 @@
-image:
-  tag: v2
+service:
+  type: LoadBalancer
+  port: 8081
 
-ingress:
-  hosts:
-    - host: guestbook.production.local
-      paths:
-        - /
+image:
+  tag: v1

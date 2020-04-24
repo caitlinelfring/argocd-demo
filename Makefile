@@ -4,7 +4,7 @@ production:
     --dest-server https://kubernetes.docker.internal:6443 \
     --repo https://github.com/caitlin615/argocd-demo.git \
     --path apps \
-    --values values-$@.yaml
+    --helm-set environment=$@
 
 pre-production:
 	argocd app create $@ \
@@ -12,7 +12,7 @@ pre-production:
     --dest-server https://kubernetes.docker.internal:6443 \
     --repo https://github.com/caitlin615/argocd-demo.git \
     --path apps \
-    --values values-$@.yaml
+    --helm-set environment=$@
 
 sync-pre-production:
 	argocd app sync pre-production
@@ -29,12 +29,14 @@ delete:
 	argocd app delete pre-production
 	argocd app delete production
 
-.PHONY: portforward init-argocd deinit-argocd  \
-	production sync-production \
+.PHONY: production sync-production \
 	pre-production sync-pre-production \
 	deploy sync delete \
-	nginx deinit-nginx \
-	deinit
+	init deinit \
+	init-argocd deinit-argocd
+
+init: init-argocd
+deinit: deinit-argocd
 
 init-argocd:
 	@# TODO: This should be installed via helm
@@ -46,13 +48,3 @@ init-argocd:
 deinit-argocd:
 	kubectl delete -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
 	kubectl delete namespace argocd
-
-nginx:
-	kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/nginx-0.30.0/deploy/static/mandatory.yaml
-	kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/nginx-0.30.0/deploy/static/provider/cloud-generic.yaml
-
-deinit-nginx:
-	kubectl delete -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/nginx-0.30.0/deploy/static/mandatory.yaml
-	kubectl delete -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/nginx-0.30.0/deploy/static/provider/cloud-generic.yaml
-
-deinit: deinit-argocd deinit-nginx

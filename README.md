@@ -9,7 +9,9 @@ from within a Docker for Mac Kubernetes cluster, requiring no external resources
 **If you would like to try out the full GitOps feature set of Argo CD,
 be sure to fork this repo first so you can push your own commits to trigger changes**.
 
-Fork this repo here: https://github.com/caitlin615/argocd-demo/fork
+Fork this repo here: https://github.com/caitlin615/argocd-demo/fork.
+
+You'll then have to update `spec.source.repoURL` in [apps/values.yaml](./apps/values.yaml) to match your forked repo URL for any of this to work.
 
 # Requirements
 - [Docker Desktop on Mac](https://docs.docker.com/docker-for-mac/install/)
@@ -21,7 +23,7 @@ Fork this repo here: https://github.com/caitlin615/argocd-demo/fork
 ## Install Argo CD
 Install Argo CD
 ```bash
-make init-argocd
+make init
 ```
 This will expose Argo CD at `http://localhost:8080` and output the default password for the `admin` user.
 Change the password in the UI, or with `argocd login localhost:8080`, then `argocd account update-password`.
@@ -29,23 +31,13 @@ Change the password in the UI, or with `argocd login localhost:8080`, then `argo
 ## Add your cluster to Argo CD
 This isn't super necessary, but allows us to pretend we're running argo on a different
 cluster from where we're deploying our applications.
+(you can also do this via the web UI)
 
 ```bash
 # List available clusters
 argocd cluster add
 # To add docker-deskop cluster
 argocd cluster add docker-desktop
-```
-
-## Set up nginx ingress controller
-```bash
-make nginx
-```
-
-Add the following to your `/etc/hosts`. The ingress controller uses hostname matching for routing,
-so this is needed to route your requests to the correct location.
-```
-127.0.0.1 guestbook.pre-production.local guestbook.production.local
 ```
 
 # Deploy "Parent" Applications
@@ -61,24 +53,13 @@ There are two parent applications that represent each "environment":
 ## Deploying
 ```bash
 make deploy
-
-# Or deploy parent/child applications individually
-make pre-production
-make production
 ```
 
 ### Force a sync
-Now that you've deployed both apps, and thus, their child apps, they will not automatically sync.
-By default, Argo CD polls with the git repositories every 3 minutes to detect manifest changes
-You can wait the three minutes, or you can manually triggering a sync. The other option
-is setting up a [git webhook](https://argoproj.github.io/argo-cd/operator-manual/webhook/)
-(which we aren't doing for this demo).
+Now that you've deployed both apps, along with their child apps, they will not automatically sync. Force a sync to get the kubernetes resources deployed.
+
 ```bash
 make sync
-
-# Or sync parent/child applications individually
-make sync-pre-production
-make sync-production
 ```
 
 You will now see something like this at http://localhost:8080.
@@ -89,8 +70,16 @@ The top two are the guestbook applications, and the bottom two are the parent ap
 # Access Guestbook
 
 Access each guestbook here:
-* http://guestbook.pre-production.local
-* http://guestbook.production.local
+* http://localhost:8081 (`production`)
+* http://localhoust:8082 (`pre-production`)
+
+# Playing with GitOps
+Now's when the real fun happens!
+
+Make some changes to the guestbook helm chart in `charts/guestbook`,
+commit them, and push them to `master` (make sure you've forked this repo!). Within three minutes (or after running `make sync`), your changes will deploy!
+
+Try changing `image.tag` to `v2` in `charts/guestbook/values-production.yml`! Update `replicaCount` and watch the magic happen!
 
 # Not included
 Not included in this POC are:
@@ -101,5 +90,5 @@ Not included in this POC are:
 * [Secrets](https://argoproj.github.io/argo-cd/operator-manual/secret-management/)
 * [Git Webhook](https://argoproj.github.io/argo-cd/operator-manual/webhook/)
 * CI
-* Initialization of `argocd` via helm and
-* HA
+* Initialization of `argocd` via helm
+* HA/DR

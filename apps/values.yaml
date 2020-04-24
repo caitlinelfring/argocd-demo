@@ -5,3 +5,5 @@ spec:
     path: charts/guestbook
     repoURL: https://github.com/caitlin615/argocd-demo
     targetRevision: HEAD
+
+environment: dev
