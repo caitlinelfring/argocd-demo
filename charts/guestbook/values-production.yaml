@@ -4,3 +4,5 @@ service:
 
 image:
   tag: v1
+
+environment: production
