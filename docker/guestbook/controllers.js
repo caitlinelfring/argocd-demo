@@ -6,6 +6,7 @@ var redisApp = angular.module('redis', ['ui.bootstrap']);
 function RedisController() {}
 
 RedisController.prototype.onRedis = function() {
+    console.log(this.scope_.msg);
     this.scope_.messages.push(this.scope_.msg);
     this.scope_.msg = "";
     var value = this.scope_.messages.join();
