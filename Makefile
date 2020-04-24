@@ -1,5 +1,5 @@
 production:
-	argocd app create $@ \
+	@argocd app create $@ \
     --dest-namespace argocd \
     --dest-server https://kubernetes.docker.internal:6443 \
     --repo https://github.com/caitlin615/argocd-demo.git \
@@ -7,7 +7,7 @@ production:
     --helm-set environment=$@
 
 pre-production:
-	argocd app create $@ \
+	@argocd app create $@ \
     --dest-namespace argocd \
     --dest-server https://kubernetes.docker.internal:6443 \
     --repo https://github.com/caitlin615/argocd-demo.git \
@@ -15,19 +15,19 @@ pre-production:
     --helm-set environment=$@
 
 sync-pre-production:
-	argocd app sync pre-production
-	argocd app sync -l app.kubernetes.io/instance=pre-production
+	@argocd app sync pre-production
+	@argocd app sync -l argocd.argoproj.io/instance=pre-production
 
 sync-production:
-	argocd app sync production
-	argocd app sync -l app.kubernetes.io/instance=production
+	@argocd app sync production
+	@argocd app sync -l argocd.argoproj.io/instance=production
 
 deploy: pre-production production
 sync: sync-pre-production sync-production
 
 delete:
-	argocd app delete pre-production
-	argocd app delete production
+	@argocd app delete pre-production
+	@argocd app delete production
 
 .PHONY: production sync-production \
 	pre-production sync-pre-production \
@@ -40,15 +40,12 @@ init: init-argocd
 deinit: deinit-argocd
 
 init-argocd:
-	@# TODO: This should be installed via helm
-	@kubectl create namespace argocd
-	@kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
-	@kubectl patch svc argocd-server -n argocd -p '{"spec": {"type": "LoadBalancer", "ports": [{"name": "http-8080", "port": 8080, "targetPort": 8080, "protocol": "TCP"}]}}'
+	@helm3 repo add argo https://argoproj.github.io/argo-helm
+	@helm3 install argocd --namespace argocd argo/argo-cd -f argocd-init/values.yaml --wait
 	@echo "Default argocd admin password, be sure to change it! '$$(kubectl get pods -n argocd -l app.kubernetes.io/name=argocd-server -o name | cut -d'/' -f 2)'"
 
 deinit-argocd:
-	kubectl delete -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
-	kubectl delete namespace argocd
+	@helm3 uninstall argocd --namespace argocd
 
 watch:
-	watch "kubectl get pods -A --sort-by=status.startTime | awk 'NR<2{print \$$0;next}{print \$$0| \"tail -r\"}'"
+	@watch "kubectl get pods -A --sort-by=status.startTime | awk 'NR<2{print \$$0;next}{print \$$0| \"tail -r\"}'"

@@ -1,0 +1,9 @@
+server:
+  extraArgs:
+    - --insecure
+  service:
+    type: LoadBalancer
+    servicePortHttp: 8080
+
+# https://github.com/argoproj/argo-helm/tree/master/charts/argo-cd#helm-v3-compatability
+installCRDs: false
