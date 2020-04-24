@@ -37,7 +37,7 @@ delete:
 	watch
 
 init: init-argocd
-deinit: deinit-argocd
+deinit: delete deinit-argocd
 
 init-argocd:
 	@helm3 repo add argo https://argoproj.github.io/argo-helm
