@@ -43,6 +43,8 @@ spec:
               value: {{ template "helm-guestbook.fullname" . }}-redis-master
             - name: REDIS_SLAVE_SERVICE_HOST
               value: {{ template "helm-guestbook.fullname" . }}-redis-master
+            - name: ENVIRONMENT
+              value: "{{ .Values.environment }}"
           resources:
 {{ toYaml .Values.resources | indent 12 }}
     {{- with .Values.nodeSelector }}
