@@ -1,0 +1,46 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: pixel-{{ .Values.environment }}
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    namespace: argocd
+    server: {{ .Values.spec.destination.server }}
+  project: default
+  source:
+    path: helm/charts/java-service
+    repoURL: https://github.com/RentTheRunway/sre-kubernetes
+    targetRevision: argocd-demo
+    helm:
+      # Release name override (defaults to application name)
+      releaseName: pixel-{{ .Values.environment }}
+
+      # Extra parameters to set (same as setting through values.yaml, but these take precedence)
+      parameters:
+        # Disabled resource limits/requests for running locally
+        - name: "resources.requests.cpu"
+          value: "0"
+        - name: "resources.requests.memory"
+          value: "0"
+        - name: "resources.limits.cpu"
+          value: "0"
+        - name: "resources.limits.memory"
+          value: "0"
+        - name: "repoUrl"
+          value: "gcr.io/rtr-e2e-4f85741f"
+        - name: serviceType
+          value: "LoadBalancer"
+
+      # Helm values files for overriding values in the helm chart
+      # The path is relative to the spec.source.path directory defined above
+      valueFiles:
+        - values/e2e/pixel.yaml
+
+  # Sync policy
+  syncPolicy:
+    automated:
+      prune: true # Specifies if resources should be pruned during auto-syncing ( false by default ).
+      selfHeal: true # Specifies if partial app sync should be executed when resources are changed only in target Kubernetes cluster and no git change detected ( false by default ).
