@@ -8,13 +8,12 @@ echo
 if [ -z "${GITHUB_ACCESS_TOKEN}" ]; then echo "GITHUB_ACCESS_TOKEN env var required!"; exit 1; fi
 if [ -z "${GITHUB_REPO}" ]; then echo "GITHUB_REPO env var required! (ie caitlin615/argocd-repo)"; exit 1; fi
 
-HOOK_HOST=$(curl -s http://localhost:4040/api/tunnels | jq -r '.tunnels[0].public_url')
-if [ -z "${HOOK_HOST}" ]; then
-    echo "ngrok not started. Start with 'ngrok http 8080'"
-    exit 1
-fi
-
 function createHook {
+    HOOK_HOST=$(curl -s http://localhost:4040/api/tunnels | jq -r '.tunnels[0].public_url')
+    if [ -z "${HOOK_HOST}" ]; then
+        echo "ngrok not started. Start with 'ngrok http 8080'"
+        exit 1
+    fi
     # https://developer.github.com/v3/repos/hooks/#create-a-hook
     HOOK_URL="${HOOK_HOST}/api/webhook"
 
