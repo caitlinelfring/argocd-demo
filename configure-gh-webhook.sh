@@ -4,8 +4,10 @@ test -r .env && source .env
 
 if [ -z "${GITHUB_ACCESS_TOKEN}" ]; then echo "GITHUB_ACCESS_TOKEN env var required!"; exit 1; fi
 if [ -z "${GITHUB_REPOS}" ]; then echo "GITHUB_REPOS env var required! should be space-separated list (ie 'caitlin615/argocd-repo caitlin615/argocd-apps')"; exit 1; fi
+if [ -z "${HOOK_ENDPOINT}" ]; then echo "HOOK_ENDPOINT env var required!"; exit 1; fi
+HOOK_ENDPOINT="${HOOK_ENDPOINT#*/}"
 
-echo "WARNING: This will delete all existing 'ngrok.io/api/webhook' webhooks in github repos: ${GITHUB_REPOS}!"
+echo "WARNING: This will delete all existing webhooks that end with 'ngrok.io/${HOOK_ENDPOINT}' github repos: ${GITHUB_REPOS}"
 echo
 
 GITHUB_REPOS_ARRAY=(${GITHUB_REPOS})
@@ -17,7 +19,7 @@ function createHook {
         exit 1
     fi
     # https://developer.github.com/v3/repos/hooks/#create-a-hook
-    HOOK_URL="${HOOK_HOST}/api/webhook"
+    HOOK_URL="${HOOK_HOST}/${HOOK_ENDPOINT}"
 
     HOOK_BODY=$(echo '{
     "name": "web",
@@ -45,7 +47,7 @@ function deleteHooks {
         for hook in $(curl -s -H "Authorization: token ${GITHUB_ACCESS_TOKEN}" \
             -H "Accept: application/vnd.github.v3+json" \
             "https://api.github.com/repos/${REPO}/hooks" | \
-            jq -r '.[] | select(.config.url | endswith(".ngrok.io/api/webhook")) | .id' ); do
+            jq -r '.[] | select(.config.url | endswith(".ngrok.io/'"${HOOK_ENDPOINT}"'")) | .id' ); do
 
             curl -s -H "Authorization: token ${GITHUB_ACCESS_TOKEN}" \
                 -H "Accept: application/vnd.github.v3+json" \
