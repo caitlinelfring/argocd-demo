@@ -33,6 +33,8 @@ spec:
           value: "gcr.io/rtr-e2e-4f85741f"
         - name: serviceType
           value: "LoadBalancer"
+        - name: "istio.sideCarEnabled"
+          value: "false"
 
       # Helm values files for overriding values in the helm chart
       # The path is relative to the spec.source.path directory defined above
