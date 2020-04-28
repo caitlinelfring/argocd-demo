@@ -24,7 +24,7 @@ deinit: delete deinit-argocd
 init-argocd:
 	helm3 repo add argo https://argoproj.github.io/argo-helm
 	kubectl create namespace argocd --dry-run=client -o yaml | kubectl apply -f -
-	helm3 install argocd --namespace argocd argo/argo-cd -f argocd-init/values.yaml --wait
+	helm3 upgrade argocd --namespace argocd argo/argo-cd -f argocd-init/values.yaml --wait --install
 	echo "Default argocd admin password, be sure to change it! '$$(kubectl get pods -n argocd -l app.kubernetes.io/name=argocd-server -o name | cut -d'/' -f 2)'"
 
 deinit-argocd:

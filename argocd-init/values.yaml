@@ -5,5 +5,39 @@ server:
     type: LoadBalancer
     servicePortHttp: 8080
 
+  volumes:
+    - name: custom-tools
+      emptyDir: {}
+
+  initContainers:
+    - name: download-tools
+      image: alpine:3.8
+      command: [sh, -c]
+      args:
+        - wget -qO /custom-tools/helmfile https://github.com/roboll/helmfile/releases/download/v0.98.2/helmfile_linux_amd64 &&
+          chmod +x /custom-tools/helmfile
+      volumeMounts:
+        - mountPath: /custom-tools
+          name: custom-tools
+  volumeMounts:
+    - mountPath: /usr/local/bin/helmfile
+      name: custom-tools
+      subPath: helmfile
+  # https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/argocd-cm.yaml
+  config:
+    configManagementPlugins: |
+      - name: helmfile
+        init:                          # Optional command to initialize application source directory
+          command: ["/bin/sh", "-c"]
+          args:
+            - helm init --client-only &&
+              helm plugin install https://github.com/futuresimple/helm-secrets &&
+              echo "namespace: rtr" > .values.yaml &&
+              kubectl get secret sops-private-key -o jsonpath='{.data.key}' | base64 --decode | gpg --import
+        generate:                      # Command to generate manifests YAML
+          command: ["/bin/sh", "-c"]
+          args: # https://argoproj.github.io/argo-cd/user-guide/build-environment/
+            - helmfile --skip-deps --selector app=${ARGOCD_APP_NAME} -f rtr.yaml -e e2e template
+
 # https://github.com/argoproj/argo-helm/tree/master/charts/argo-cd#helm-v3-compatability
 installCRDs: false

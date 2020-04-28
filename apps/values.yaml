@@ -1,6 +1,6 @@
 spec:
   destination:
-    namespace: apps
+    namespace: rtr
     server: https://kubernetes.default.svc
   source:
     rootPath: helm/charts

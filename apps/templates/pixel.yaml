@@ -10,27 +10,32 @@ spec:
     server: {{ .Values.spec.destination.server }}
   project: default
   source:
-    path: {{ .Values.spec.source.rootPath }}/java-service
+    # path: {{ .Values.spec.source.rootPath }}/java-service
+    path: helm
     repoURL: {{ .Values.spec.source.repoURL }}
     targetRevision: {{ .Values.spec.source.targetRevision }}
-    helm:
-      # Extra parameters to set (same as setting through values.yaml, but these take precedence)
-      parameters:
-        # Disabled resource limits/requests for running locally
-        - name: "resources.requests.cpu"
-          value: "0"
-        - name: "resources.requests.memory"
-          value: "0"
-        - name: "resources.limits.cpu"
-          value: "0"
-        - name: "resources.limits.memory"
-          value: "0"
-        - name: "repoUrl"
-          value: "gcr.io/rtr-e2e-4f85741f"
-        - name: serviceType
-          value: "LoadBalancer"
-        - name: "istio.sideCarEnabled"
-          value: "false"
+    plugin:
+      name: helmfile
+      # helmfile --selector app=pixel -f /Users/celfring/repos/sre-kubernetes/helm/rtr.yaml -e e2e sync
+
+    # helm:
+    #   # Extra parameters to set (same as setting through values.yaml, but these take precedence)
+    #   parameters:
+    #     # Disabled resource limits/requests for running locally
+    #     - name: "resources.requests.cpu"
+    #       value: "0"
+    #     - name: "resources.requests.memory"
+    #       value: "0"
+    #     - name: "resources.limits.cpu"
+    #       value: "0"
+    #     - name: "resources.limits.memory"
+    #       value: "0"
+    #     - name: "repoUrl"
+    #       value: "gcr.io/rtr-e2e-4f85741f"
+    #     - name: serviceType
+    #       value: "LoadBalancer"
+    #     - name: "istio.sideCarEnabled"
+    #       value: "false"
 
       # Helm values files for overriding values in the helm chart
       # The path is relative to the spec.source.path directory defined above
