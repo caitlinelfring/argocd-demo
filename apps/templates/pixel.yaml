@@ -1,23 +1,19 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: pixel-{{ .Values.environment }}
-  namespace: argocd
+  name: pixel
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
   destination:
-    namespace: argocd
+    namespace: {{ .Values.spec.destination.namespace }}
     server: {{ .Values.spec.destination.server }}
   project: default
   source:
-    path: helm/charts/java-service
-    repoURL: https://github.com/RentTheRunway/sre-kubernetes
-    targetRevision: argocd-demo
+    path: {{ .Values.spec.source.rootPath }}/java-service
+    repoURL: {{ .Values.spec.source.repoURL }}
+    targetRevision: {{ .Values.spec.source.targetRevision }}
     helm:
-      # Release name override (defaults to application name)
-      releaseName: pixel-{{ .Values.environment }}
-
       # Extra parameters to set (same as setting through values.yaml, but these take precedence)
       parameters:
         # Disabled resource limits/requests for running locally

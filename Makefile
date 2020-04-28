@@ -1,42 +1,19 @@
-production:
-	@argocd app create $@ \
+deploy:
+	@argocd app create apps \
     --dest-namespace argocd \
     --dest-server https://kubernetes.docker.internal:6443 \
     --repo https://github.com/caitlin615/argocd-demo.git \
     --path apps \
-    --helm-set environment=$@
+    --revision pixel
 
-pre-production:
-	@argocd app create $@ \
-    --dest-namespace argocd \
-    --dest-server https://kubernetes.docker.internal:6443 \
-    --repo https://github.com/caitlin615/argocd-demo.git \
-    --path apps \
-    --helm-set environment=$@
-
-sync-pre-production:
-	@argocd app sync pre-production
-	@argocd app sync -l argocd.argoproj.io/instance=pre-production
-
-sync-production:
+sync:
 	@argocd app sync production
-	@argocd app sync -l argocd.argoproj.io/instance=production
+	@argocd app sync -l argocd.argoproj.io/instance=apps
 
-deploy: pre-production production
-sync: sync-pre-production sync-production
+delete:
+	@argocd app delete apps
 
-delete-pre-production:
-	@argocd app delete pre-production
-
-delete-production:
-	@argocd app delete production
-
-delete: delete-pre-production delete-production
-
-.PHONY: production sync-production \
-	delete-pre-production delete-production \
-	pre-production sync-pre-production \
-	deploy sync delete \
+.PHONY: deploy sync delete \
 	init deinit \
 	init-argocd deinit-argocd \
 	watch

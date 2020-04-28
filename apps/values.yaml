@@ -1,9 +1,8 @@
 spec:
   destination:
+    namespace: apps
     server: https://kubernetes.default.svc
   source:
-    path: charts/guestbook
-    repoURL: https://github.com/caitlin615/argocd-demo
-    targetRevision: HEAD
-
-environment: dev
+    rootPath: helm/charts
+    repoURL: https://github.com/RentTheRunway/sre-kubernetes
+    targetRevision: argocd-demo
