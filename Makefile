@@ -25,11 +25,16 @@ sync-production:
 deploy: pre-production production
 sync: sync-pre-production sync-production
 
-delete:
+delete-pre-production:
 	@argocd app delete pre-production
+
+delete-production:
 	@argocd app delete production
 
+delete: delete-pre-production delete-production
+
 .PHONY: production sync-production \
+	delete-pre-production delete-production \
 	pre-production sync-pre-production \
 	deploy sync delete \
 	init deinit \
