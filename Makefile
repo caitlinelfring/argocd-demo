@@ -8,7 +8,7 @@ deploy:
 
 sync:
 	argocd app sync apps
-	argocd app sync -l argocd.argoproj.io/instance=apps
+	@#argocd app sync -l argocd.argoproj.io/instance=apps
 
 delete:
 	argocd app delete apps
