@@ -17,7 +17,14 @@ spec:
       name: helmfile
       env:
         - name: HELMFILE_ARGS
-          value: "--set resources.requests.cpu=0 --set resources.requests.memory=0 --set resources.limits.cpu=0 --set resources.limits.memory=0 --set repoUrl=gcr.io/rtr-e2e-4f85741f --set istio.sideCarEnabled=false --set serviceType=LoadBalancer"
+          value: >-
+            --set resources.requests.cpu=0
+            --set resources.requests.memory=0
+            --set resources.limits.cpu=0
+            --set resources.limits.memory=0
+            --set repoUrl=gcr.io/rtr-e2e-4f85741f
+            --set istio.sideCarEnabled=false
+            --set serviceType=LoadBalancer
 
   # Sync policy
   syncPolicy:
