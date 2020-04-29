@@ -36,6 +36,7 @@ secrets:
 	@kubectl patch serviceaccount --namespace rtr default -p '{"imagePullSecrets": [{"name": "gcr-json-key"}]}'
 	@kubectl create secret generic environment --namespace rtr --from-literal=environment=stage
 	@kubectl create secret generic templated-properties-env-vars --namespace rtr --from-literal=FOO=BAR
+	@kubectl create secret generic github-access-token --namespace argocd --from-literal=username=caitlin615 --from-literal=password=$$(source .env && echo $$GITHUB_ACCESS_TOKEN)
 
 deinit-argocd:
 	helm3 uninstall argocd --namespace argocd

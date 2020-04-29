@@ -7,6 +7,14 @@ server:
 
   # https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/argocd-cm.yaml
   config:
+    repositories: |
+      - url: https://github.com/RentTheRunway/sre-kubernetes
+        passwordSecret:
+          name: github-access-token
+          key: password
+        usernameSecret:
+          name: github-access-token
+          key: username
     configManagementPlugins: |
       - name: helmfile
         init:
