@@ -26,7 +26,16 @@ init-argocd:
 	kubectl create namespace argocd --dry-run=client -o yaml | kubectl apply -f -
 	kubectl create namespace rtr --dry-run=client -o yaml | kubectl apply -f -
 	helm3 upgrade argocd --namespace argocd argo/argo-cd -f argocd-init/values.yaml --wait --install
-	echo "Default argocd admin password, be sure to change it! '$$(kubectl get pods -n argocd -l app.kubernetes.io/name=argocd-server -o name | cut -d'/' -f 2)'"
+
+secrets:
+	@kubectl create secret --namespace rtr docker-registry gcr-json-key \
+		--docker-server=gcr.io \
+		--docker-username=_json_key \
+		--docker-password="$$(cat gcr.json)" \
+		--docker-email=foo@example.com
+	@kubectl patch serviceaccount --namespace rtr default -p '{"imagePullSecrets": [{"name": "gcr-json-key"}]}'
+	@kubectl create secret generic environment --namespace rtr --from-literal=environment=stage
+	@kubectl create secret generic templated-properties-env-vars --namespace rtr --from-literal=FOO=BAR
 
 deinit-argocd:
 	helm3 uninstall argocd --namespace argocd
