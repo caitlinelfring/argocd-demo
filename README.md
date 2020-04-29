@@ -14,11 +14,11 @@ You'll then have to update `spec.source.repoURL` in [apps/values.yaml](./apps/va
 
 ## Requirements
 
-- [Docker Desktop on Mac](https://docs.docker.com/docker-for-mac/install/)
-- [Kubernetes cluster enabled](https://docs.docker.com/docker-for-mac/#kubernetes)
-- [Helm3](https://helm.sh/docs/intro/install/)
-- [Argo CLI](https://argoproj.github.io/argo-cd/getting_started/#2-download-argo-cd-cli)
-  - `brew tap argoproj/tap && brew install argoproj/tap/argocd`
+* *[Docker Desktop on Mac](https://docs.docker.com/docker-for-mac/install/)
+* *[Kubernetes cluster enabled](https://docs.docker.com/docker-for-mac/#kubernetes)
+* *[Helm3](https://helm.sh/docs/intro/install/)
+* *[Argo CLI](https://argoproj.github.io/argo-cd/getting_started/#2-download-argo-cd-cli)
+  * *`brew tap argoproj/tap && brew install argoproj/tap/argocd`
 
 ## Setup
 
@@ -72,7 +72,7 @@ Now that you've deployed both apps, along with their child apps, they will not a
 make sync
 ```
 
-You will now see something like this at http://localhost:8080.
+You will now see something like this at <http://localhost:8080.>
 The top two are the guestbook applications, and the bottom two are the parent applications.
 
 ![img](./assets/apps.png)
