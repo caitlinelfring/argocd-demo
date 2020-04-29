@@ -13,24 +13,28 @@ server:
           command: ["/bin/sh", "-c"]
           args:
             # NOTE: This secret must be imported into the cluster ahead of time
-            - kubectl get secret -n default sops-private-key -o jsonpath='{.data.key}' | base64 --decode | gpg --import
+            - |
+              helm plugin install https://github.com/futuresimple/helm-secrets &&
+              kubectl get secret -n default sops-private-key -o jsonpath='{.data.key}' | base64 --decode | gpg --import
         generate:
           command: ["/bin/sh", "-c"]
           # https://argoproj.github.io/argo-cd/user-guide/build-environment/
-          # TODO: Additional args
           args:
             - |
               echo "namespace: rtr" > ../.values.yaml
-              helmfile --selector app=${ARGOCD_APP_NAME} -f rtr.yaml -e e2e template --skip-deps "${HELMFILE_ARGS}"
+              helmfile --selector app=${ARGOCD_APP_NAME} -f rtr.yaml -e e2e template --skip-deps --args "${HELMFILE_ARGS}"
 repoServer:
   initContainers:
+    # https://argoproj.github.io/argo-cd/operator-manual/custom_tools/
     - name: download-tools
       image: alpine:3.8
       command: [sh, -c]
       args:
         - |
           wget -qO /custom-tools/helmfile https://github.com/roboll/helmfile/releases/download/v0.98.2/helmfile_linux_amd64 &&
-          chmod +x /custom-tools/helmfile
+          chmod +x /custom-tools/helmfile &&
+          wget -qO /custom-tools/sops https://github.com/mozilla/sops/releases/download/3.0.4/sops-3.0.4.linux &&
+          chmod +x /custom-tools/sops
       volumeMounts:
         - mountPath: /custom-tools
           name: custom-tools
@@ -41,6 +45,9 @@ repoServer:
     - mountPath: /usr/local/bin/helmfile
       name: custom-tools
       subPath: helmfile
+    - mountPath: /usr/local/bin/sops
+      name: custom-tools
+      subPath: sops
 
 # https://github.com/argoproj/argo-helm/tree/master/charts/argo-cd#helm-v3-compatability
 installCRDs: false

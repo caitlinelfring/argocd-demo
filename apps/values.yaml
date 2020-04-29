@@ -3,6 +3,6 @@ spec:
     namespace: rtr
     server: https://kubernetes.default.svc
   source:
-    rootPath: helm/charts
+    path: helm
     repoURL: https://github.com/RentTheRunway/sre-kubernetes
     targetRevision: argocd-demo
