@@ -17,6 +17,9 @@ spec:
     plugin:
       name: helmfile
       # helmfile --selector app=pixel -f /Users/celfring/repos/sre-kubernetes/helm/rtr.yaml -e e2e sync
+      env:
+        - name: HELMFILE_ARGS
+          value: "--set resources.requests.cpu=0 --set resources.requests.memory=0 --set resources.limits.cpu=0 --set resources.limits.memory=0 --set repoUrl=gcr.io/rtr-e2e-4f85741f --set istio.sideCarEnabled=false --set serviceType=LoadBalancer"
 
     # helm:
     #   # Extra parameters to set (same as setting through values.yaml, but these take precedence)
@@ -36,11 +39,6 @@ spec:
     #       value: "LoadBalancer"
     #     - name: "istio.sideCarEnabled"
     #       value: "false"
-
-      # Helm values files for overriding values in the helm chart
-      # The path is relative to the spec.source.path directory defined above
-      valueFiles:
-        - values/e2e/pixel.yaml
 
   # Sync policy
   syncPolicy:
