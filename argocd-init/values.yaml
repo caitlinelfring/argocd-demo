@@ -22,7 +22,7 @@ server:
           args:
             # NOTE: This secret must be imported into the cluster ahead of time
             - |
-              helm plugin install https://github.com/futuresimple/helm-secrets &&
+              helm plugin list | grep "^secrets" || helm plugin install https://github.com/futuresimple/helm-secrets
               kubectl get secret -n default sops-private-key -o jsonpath='{.data.key}' | base64 --decode | gpg --import
         generate:
           command: ["/bin/sh", "-c"]
