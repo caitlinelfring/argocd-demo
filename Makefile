@@ -18,8 +18,8 @@ delete:
 	init-argocd deinit-argocd \
 	watch
 
-init: init-argocd
-deinit: delete deinit-argocd
+init: init-argocd secrets
+deinit: deinit-argocd
 
 init-argocd:
 	helm3 repo add argo https://argoproj.github.io/argo-helm
@@ -38,7 +38,7 @@ secrets:
 	@kubectl create secret generic templated-properties-env-vars --namespace rtr --from-literal=FOO=BAR
 	@kubectl create secret generic github-access-token --namespace argocd --from-literal=username=caitlin615 --from-literal=password=$$(source .env && echo $$GITHUB_ACCESS_TOKEN)
 
-deinit-argocd:
+deinit-argocd: delete
 	helm3 uninstall argocd --namespace argocd
 	kubectl delete namespace argocd
 	kubectl delete namespace rtr
