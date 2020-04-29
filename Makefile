@@ -1,7 +1,7 @@
 deploy:
 	argocd app create apps \
     --dest-namespace argocd \
-    --dest-server https://kubernetes.docker.internal:6443 \
+    --dest-server https://kubernetes.default.svc \
     --repo https://github.com/caitlin615/argocd-demo.git \
     --path apps \
     --revision pixel
