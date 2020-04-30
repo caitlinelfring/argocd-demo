@@ -33,15 +33,15 @@ spec:
           source:
             git:
               url: THIS_WILL_BE_REPLACED
-              cloneDirectory: "/git/k8s-demo"
+              cloneDirectory: "/git/k8s-demo-2"
               filePath: ".argo/ci.yaml"
               ref: THIS_WILL_BE_REPLACED
           # Apply parameters for workflow resource fetched from github
-          parameters:
-            - src:
-                dependencyName: test-dep
-                dataKey: body.head_commit.id
-              dest: spec.arguments.parameters.0.value
+          # parameters:
+          #   - src:
+          #       dependencyName: test-dep
+          #       dataKey: body.head_commit.id
+          #     dest: spec.arguments.parameters.1.value
       # Apply parameters at the template level.
       # these are pulled from the github webhook body
       parameters:

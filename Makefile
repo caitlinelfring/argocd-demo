@@ -67,11 +67,18 @@ events-init:
 		--dry-run=client -o yaml | kubectl apply -f -
 	kubectl apply -n argo-events -f https://raw.githubusercontent.com/argoproj/argo-events/$(AE_HASH)/manifests/namespace-install.yaml
 	kubectl apply -n argo-events -f argo-events
-	kubectl create namespace argo --dry-run=client -o yaml | kubectl apply -f -
-	kubectl apply -n argo -f https://raw.githubusercontent.com/argoproj/argo/stable/manifests/install.yaml
-	kubectl patch svc -n argo argo-server -p '{"spec": {"type": "LoadBalancer"}}'
+	kubectl apply -n argo-events -f https://raw.githubusercontent.com/argoproj/argo/stable/manifests/install.yaml
+	kubectl patch svc -n argo-events argo-server -p '{"spec": {"type": "LoadBalancer"}}'
+
+dh-cred:
+	@kubectl create secret docker-registry dockerhub --namespace argo-events \
+		--docker-server=https://index.docker.io/v1/ \
+		--docker-username=celfring \
+		--docker-password=$$(source .env && echo $$DOCKERHUB_PASSWORD) \
+		--docker-email=celfring@gmail.com \
+		--dry-run=client -o yaml | kubectl apply -f -
 
 events-deinit:
 	kubectl delete -n argo-events -f argo-events
 	kubectl delete -n argo-events -f https://raw.githubusercontent.com/argoproj/argo-events/$(AE_HASH)/manifests/namespace-install.yaml
-	kubectl delete -n argo -f https://raw.githubusercontent.com/argoproj/argo/stable/manifests/install.yaml
+	kubectl delete -n argo-events -f https://raw.githubusercontent.com/argoproj/argo/stable/manifests/install.yaml
