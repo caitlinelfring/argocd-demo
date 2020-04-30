@@ -56,3 +56,22 @@ deinit-argocd:
 
 watch:
 	@watch "kubectl get pods -A --sort-by=status.startTime | awk 'NR<2{print \$$0;next}{print \$$0| \"tail -r\"}'"
+
+# argo-events install broke in https://github.com/argoproj/argo-events/commit/e7ecad29ec8d3f2b703f812a0e96a32745d3f8f6
+AE_HASH=336cb65a412db9b5b1362f04534e28ac74e829d9
+
+events-init:
+	kubectl create namespace argo-events --dry-run=client -o yaml | kubectl apply -f -
+	kubectl create secret generic github-access-token --namespace argo-events \
+		--from-literal=username=caitlin615 --from-literal=password=$$(source .env && echo $$GITHUB_ACCESS_TOKEN) \
+		--dry-run=client -o yaml | kubectl apply -f -
+	kubectl apply -n argo-events -f https://raw.githubusercontent.com/argoproj/argo-events/$(AE_HASH)/manifests/namespace-install.yaml
+	kubectl apply -n argo-events -f argo-events
+	kubectl create namespace argo --dry-run=client -o yaml | kubectl apply -f -
+	kubectl apply -n argo -f https://raw.githubusercontent.com/argoproj/argo/stable/manifests/install.yaml
+	kubectl patch svc -n argo argo-server -p '{"spec": {"type": "LoadBalancer"}}'
+
+events-deinit:
+	kubectl delete -n argo-events -f argo-events
+	kubectl delete -n argo-events -f https://raw.githubusercontent.com/argoproj/argo-events/$(AE_HASH)/manifests/namespace-install.yaml
+	kubectl delete -n argo -f https://raw.githubusercontent.com/argoproj/argo/stable/manifests/install.yaml
