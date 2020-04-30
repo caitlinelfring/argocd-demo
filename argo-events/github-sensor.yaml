@@ -24,35 +24,36 @@ spec:
       port: 9300
   triggers:
     - template:
-        name: github-workflow-trigger
+        name: github-trigger-workflow
         k8s:
           group: argoproj.io
           version: v1alpha1
           resource: workflows
           operation: create
           source:
-            resource:
-              apiVersion: argoproj.io/v1alpha1
-              kind: Workflow
-              metadata:
-                generateName: github-
-              spec:
-                entrypoint: whalesay
-                arguments:
-                  parameters:
-                  - name: message
-                    # value will get overridden by the event payload
-                    value: hello world
-                templates:
-                - name: whalesay
-                  inputs:
-                    parameters:
-                    - name: message
-                  container:
-                    image: docker/whalesay:latest
-                    command: [cowsay]
-                    args: ["{{inputs.parameters.message}}"]
+            git:
+              url: THIS_WILL_BE_REPLACED
+              cloneDirectory: "/git/k8s-demo"
+              filePath: ".argo/ci.yaml"
+              ref: THIS_WILL_BE_REPLACED
+          # Apply parameters for workflow resource fetched from github
           parameters:
             - src:
                 dependencyName: test-dep
+                dataKey: body.head_commit.id
               dest: spec.arguments.parameters.0.value
+      # Apply parameters at the template level.
+      # these are pulled from the github webhook body
+      parameters:
+        - src:
+            dependencyName: test-dep
+            dataKey: body.repository.name
+          dest: name
+        - src:
+            dependencyName: test-dep
+            dataKey: body.repository.git_url
+          dest: k8s.source.git.url
+        - src:
+            dependencyName: test-dep
+            dataKey: body.ref
+          dest: k8s.source.git.ref
