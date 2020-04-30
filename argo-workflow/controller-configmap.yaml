@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: workflow-controller-configmap
+data:
+  artifactRepository: |
+    s3:
+      bucket: artifacts
+      endpoint: argo-artifacts.argo-events.svc:9000        #AWS => s3.amazonaws.com; GCS => storage.googleapis.com
+      insecure: true                  #omit for S3/GCS. Needed when minio runs without TLS
+      accessKeySecret:                #omit if accessing via AWS IAM
+        name: argo-artifacts
+        key: accesskey
+      secretKeySecret:                #omit if accessing via AWS IAM
+        name: argo-artifacts
+        key: secretkey
+      useSDKCreds: false

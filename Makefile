@@ -82,3 +82,10 @@ events-deinit:
 	kubectl delete -n argo-events -f argo-events
 	kubectl delete -n argo-events -f https://raw.githubusercontent.com/argoproj/argo-events/$(AE_HASH)/manifests/namespace-install.yaml
 	kubectl delete -n argo-events -f https://raw.githubusercontent.com/argoproj/argo/stable/manifests/install.yaml
+
+
+# minio:
+# 	helm3 upgrade argo-artifacts stable/minio \
+# 		--install --namespace argo-events \
+# 		--set service.type=LoadBalancer --set fullnameOverride=argo-artifacts
+#			kubectl apply -n argo-events -f argo-workflow
