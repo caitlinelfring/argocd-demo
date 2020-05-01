@@ -77,6 +77,10 @@ dh-cred:
 		--docker-password=$$(source .env && echo $$DOCKERHUB_PASSWORD) \
 		--docker-email=celfring@gmail.com \
 		--dry-run=client -o yaml | kubectl apply -f -
+	@kubectl create secret generic dockerhub-generic --namespace argo-events \
+			--from-literal=username=celfring \
+			--from-literal=password=$$(source .env && echo $$DOCKERHUB_PASSWORD) \
+			--dry-run=client -o yaml | kubectl apply -f -
 
 events-deinit:
 	kubectl delete -n argo-events -f argo-events
