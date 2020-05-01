@@ -25,7 +25,7 @@ spec:
         # url the gateway will use to register at Github.
         # This url must be reachable from outside the cluster.
         # The gateway pod is backed by the service defined in the gateway spec. So get the URL for that service Github can reach to.
-        url: https://99235009.ngrok.io
+        url: https://da87c9f2.ngrok.io
       # type of events to listen to.
       # following listens to everything, hence *
       # You can find more info on https://developer.github.com/v3/activity/events/types/
