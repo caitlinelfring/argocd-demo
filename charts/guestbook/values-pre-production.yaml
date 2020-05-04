@@ -1,8 +1,6 @@
-service:
-  type: LoadBalancer
-  port: 8082
-
-image:
-  tag: v2
-
 environment: pre-production
+image:
+  tag: v1
+service:
+  port: 8082
+  type: LoadBalancer
