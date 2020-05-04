@@ -1,6 +1,6 @@
 environment: pre-production
 image:
-  tag: v1
+  tag: v3
 service:
   port: 8082
   type: LoadBalancer
