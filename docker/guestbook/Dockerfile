@@ -24,7 +24,5 @@ RUN pear install nrk/Predis
 RUN sed -i 's#ErrorLog /proc/self/fd/2#ErrorLog "|$/bin/cat 1>\&2"#' /etc/apache2/apache2.conf
 RUN sed -i 's#CustomLog /proc/self/fd/1 combined#CustomLog "|/bin/cat" combined#' /etc/apache2/apache2.conf
 
-COPY guestbook.php /var/www/html/guestbook.php
-COPY controllers.js /var/www/html/controllers.js
-COPY fancy.js /var/www/html/fancy.js
-COPY index.v2.php /var/www/html/index.php
+COPY *.js /var/www/html/
+COPY *.php /var/www/html/

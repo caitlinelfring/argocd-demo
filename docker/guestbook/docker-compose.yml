@@ -3,11 +3,11 @@ services:
   app:
     build:
       context: .
-      dockerfile: Dockerfile.v1
+      dockerfile: Dockerfile
     volumes:
       - ./controllers.js:/var/www/html/controllers.js
       - ./guestbook.php:/var/www/html/guestbook.php
-      - ./index.v1.php:/var/www/html/index.php
+      - ./index.php:/var/www/html/index.php
       # - ./fancy.js:/var/www/html/fancy.js
     depends_on:
       - redis
