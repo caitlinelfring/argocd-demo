@@ -1,6 +1,6 @@
 environment: production
 image:
-  tag: v3
+  tag: v4
 service:
   port: 8081
   type: LoadBalancer
