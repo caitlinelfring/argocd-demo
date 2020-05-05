@@ -1,7 +1,7 @@
 production:
 	@argocd app create $@ \
     --dest-namespace argocd \
-    --dest-server https://kubernetes.docker.internal:6443 \
+    --dest-server https://kubernetes.default.svc \
     --repo https://github.com/caitlin615/argocd-demo.git \
     --path apps \
     --helm-set environment=$@
@@ -9,7 +9,7 @@ production:
 pre-production:
 	@argocd app create $@ \
     --dest-namespace argocd \
-    --dest-server https://kubernetes.docker.internal:6443 \
+    --dest-server https://kubernetes.default.svc \
     --repo https://github.com/caitlin615/argocd-demo.git \
     --path apps \
     --helm-set environment=$@

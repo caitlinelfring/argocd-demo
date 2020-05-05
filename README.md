@@ -33,19 +33,6 @@ make init
 This will expose Argo CD at `http://localhost:8080` and output the default password for the `admin` user.
 Change the password in the UI, or with `argocd login localhost:8080`, then `argocd account update-password`.
 
-## Add your cluster to Argo CD
-
-This isn't super necessary, but allows us to pretend we're running argo on a different
-cluster from where we're deploying our applications.
-(you can also do this via the web UI)
-
-```bash
-# List available clusters
-argocd cluster add
-# To add docker-deskop cluster
-argocd cluster add docker-desktop
-```
-
 ## Deploy "Parent" Applications
 
 For the purposes of this demo, we will be using the [**app of apps** pattern](https://argoproj.github.io/argo-cd/operator-manual/cluster-bootstrapping/). This means we create an app
