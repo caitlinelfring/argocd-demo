@@ -14,11 +14,11 @@ You'll then have to update `spec.source.repoURL` in [apps/values.yaml](./apps/va
 
 ## Requirements
 
-* *[Docker Desktop on Mac](https://docs.docker.com/docker-for-mac/install/)
-* *[Kubernetes cluster enabled](https://docs.docker.com/docker-for-mac/#kubernetes)
-* *[Helm3](https://helm.sh/docs/intro/install/)
-* *[Argo CLI](https://argoproj.github.io/argo-cd/getting_started/#2-download-argo-cd-cli)
-  * *`brew tap argoproj/tap && brew install argoproj/tap/argocd`
+* [Docker Desktop on Mac](https://docs.docker.com/docker-for-mac/install/)
+* [Kubernetes cluster enabled](https://docs.docker.com/docker-for-mac/#kubernetes)
+* [Helm3](https://helm.sh/docs/intro/install/)
+* [Argo CLI](https://argoproj.github.io/argo-cd/getting_started/#2-download-argo-cd-cli)
+  * `brew tap argoproj/tap && brew install argoproj/tap/argocd`
 
 ## Setup
 
